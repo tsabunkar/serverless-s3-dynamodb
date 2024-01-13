@@ -5,6 +5,10 @@ frameworkVersion: "3"
 
 custom:
   tableName: "users-table-${sls:stage}"
+  s3Bucket: "aws-node-express-dynamodb-api-project"
+
+plugins:
+  - serverless-offline
 
 provider:
   name: aws
@@ -25,11 +29,35 @@ provider:
   environment:
     USERS_TABLE: ${self:custom.tableName}
 
+package:
+  # individually: true
+  include:
+    - dist/**.js
+  exclude:
+    - ./**.md
+    - ./**.env*
+    - ./tsconfig*.json
+    - coverage/**
+    - nest-cli.json
+    - src/**
+    - docker/**
+    - docs/**
+    - test/**
+
 functions:
   api:
     handler: index.handler
+    timeout: 600 # 10 minutes
     events:
       - httpApi: "*"
+      - s3:
+          # bucket: ${cf:${self.custom.infraStack}.exportBucketName}
+          # bucket: ${self:custom.${self:custom.env}.s3}
+          bucket: ${self:custom.s3Bucket} # Upload to this bucket and then your lambda will invoke
+          event: s3:ObjectCreated:*
+          existing: true
+          rules:
+            - suffix: .json``
 
 resources:
   Resources:
@@ -44,3 +72,7 @@ resources:
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:custom.tableName}
+    DemoBucketUpload:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.s3Bucket} # create a unqiue bucket

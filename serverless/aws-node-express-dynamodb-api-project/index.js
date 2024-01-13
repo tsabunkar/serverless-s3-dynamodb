@@ -7,7 +7,6 @@ const {
 const express = require("express");
 const serverless = require("serverless-http");
 
-
 const app = express();
 
 const USERS_TABLE = process.env.USERS_TABLE;
@@ -70,6 +69,5 @@ app.use((req, res, next) => {
     error: "Not Found",
   });
 });
-
 
 module.exports.handler = serverless(app);
