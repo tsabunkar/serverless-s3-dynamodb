@@ -150,3 +150,6 @@ To learn more about the capabilities of `serverless-offline` and `serverless-dyn
       "name": "Shailesh"
     }
     ```
+- Please note JSON and DynamoDB JSON format are different, so you need to write code in order do that
+- Q) In serverless yaml can have two handler for same lambda function ?
+  - Ans): No, AWS only allows one handler per Lambda function. However, it is possible to register multiple triggers for a single Lambda. To implement the services pattern, you can implement a router inside your handler
