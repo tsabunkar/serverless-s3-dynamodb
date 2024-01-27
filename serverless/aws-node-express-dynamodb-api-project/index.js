@@ -119,7 +119,7 @@ module.exports.ingestData = async (event) => {
 };
 
 function getObject(Bucket, Key) {
-  console.log("Invoked getObject function");
+  // console.log("Invoked getObject function");
   console.log(JSON.stringify(Bucket, Key));
   return new Promise(async (resolve, reject) => {
     const getObjectCommand = new GetObjectCommand({ Bucket, Key });
